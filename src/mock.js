@@ -1,5 +1,5 @@
 const Mock = require('mockjs');
-const {Result} = require("element-ui");
+
 
 const Random = Mock.Random
 
@@ -18,6 +18,8 @@ Mock.mock('/captcha', 'get',  () => {
 })
 
 Mock.mock('/login', 'post',  () => {
-    return Result;
+    result.code = 401
+    result.msg = "验证码错误"
+    return result;
 })
 
