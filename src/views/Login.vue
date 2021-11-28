@@ -75,7 +75,7 @@ export default {
             const JWT = res.headers['authorization']
             // 放到vuex中
             this.$store.commit("SET_TOKEN", JWT)
-            this.$router.push('/home')
+            this.$router.push('/index')
           })
         } else {
           console.log('error submit!!');

@@ -18,8 +18,7 @@ Mock.mock('/captcha', 'get',  () => {
 })
 
 Mock.mock('/login', 'post',  () => {
-    result.code = 401
-    result.msg = "验证码错误"
+    result.code = 200
     return result;
 })
 
