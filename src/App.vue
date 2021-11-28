@@ -11,11 +11,11 @@ export default {
 </script>
 
 <style>
-#app {
-  /*background-color: aliceblue;*/
-  display: flex;
-  height: 100%;
-  width: 100%;
-  position: absolute;
-}
+  #app {
+    /*使用 flex 布局*/
+    display: flex;
+    height: 100%;
+    width: 100%;
+    position: absolute;
+  }
 </style>

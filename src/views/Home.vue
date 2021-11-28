@@ -1,4 +1,7 @@
 <template>
+<!--
+  element 页面布局
+-->
   <el-container>
     <!--    侧边栏 -->
     <el-aside width="200px">
@@ -9,6 +12,9 @@
       <el-header>
         <strong>病例管理系统</strong>
         <div class="header-avatar">
+<!--
+  用户的小头像
+-->
           <el-avatar size="medium" src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"></el-avatar>
           <el-dropdown>
             <span class="el-dropdown-link">管理页面<i class="el-icon-arrow-down el-icon--right"></i>
@@ -20,11 +26,13 @@
             <el-link href="" target="_blank">网站1</el-link>
             <el-link href="" target="_blank">网站2</el-link>
           </el-dropdown>
-
         </div>
       </el-header>
 
       <el-main>
+<!--
+    显示子路由Index
+-->
         <router-view></router-view>
       </el-main>
 

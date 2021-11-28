@@ -1,9 +1,14 @@
 <template>
-<!--  <div class="login-out">-->
+<!--
+  element 居中显示 类似于 ---- a --- b --- c ---
+-->
     <el-row type="flex" class="row-bg" justify="center">
 
       <el-col :span="6" :xl="6" :lg="7">
         <h3>欢迎来到病例管理系统！</h3>
+<!--
+  最后此处应该是一个 二维码，链接到微信小程序
+-->
         <el-image :src="require('@/assets/logo.png')"></el-image>
         <p>欢迎登录病例管理系统</p>
         <p>扫描上方二维码可以进入到小程序</p>
@@ -12,7 +17,9 @@
       <el-col :span="1">
         <el-divider direction="vertical"></el-divider>
       </el-col>
-
+<!--
+  右端的登录表单，绑定了loginForm字段
+-->
       <el-col :span="6">
         <el-form :model="loginForm" :rules="rules" ref="loginForm" label-width="100px" class="demo-ruleForm">
           <el-form-item label="用户名" prop="username" style="width: 380px">
@@ -23,11 +30,17 @@
           </el-form-item>
           <el-form-item label="验证码" prop="code" style="width: 380px">
             <el-input v-model="loginForm.code" style="width: 172px; float: left"></el-input>
+<!--
+  此处显示验证码，每次都会去getCaptcha获取验证码的图片
+ -->
             <el-image :src="captchaImg" class="captchaImg" @click="getCaptcha"></el-image>
           </el-form-item>
           <el-form-item prop="submit-but" style="width: 380px">
-            <el-button type="primary" @click="submitForm('loginForm')">立即创建</el-button>
-            <el-button @click="resetForm('ruleForm')">重置</el-button>
+<!--
+  点击触发submitForm，首先会触发rules的验证规则
+-->
+            <el-button type="primary" @click="submitForm('loginForm')">登录</el-button>
+            <el-button @click="resetForm('loginForm')">重置</el-button>
           </el-form-item>
         </el-form>
       </el-col>
@@ -66,15 +79,19 @@ export default {
   },
   methods: {
     submitForm(formName) {
+      // 根据规则验证
       this.$refs[formName].validate((valid) => {
+        // 如果验证通过，就发送登录请求
         if (valid) {
           this.$axios.post(
               '/login',
               this.loginForm
           ).then( res => {
+            // 会获取到headers里面的authorization字段
             const JWT = res.headers['authorization']
             // 放到vuex中
             this.$store.commit("SET_TOKEN", JWT)
+            // 跳转到index页面
             this.$router.push('/index')
           })
         } else {
@@ -84,11 +101,15 @@ export default {
       });
     },
     resetForm(formName) {
+      // 固定写法，重设表单
       this.$refs[formName].resetFields();
     },
     getCaptcha() {
+      // 获取验证码
       this.$axios.get('/captcha').then(res => {
+        // 获取到验证码之后，将token赋给给loginForm
         this.loginForm.token = res.data.data.token
+        // 将返回的图片给当前的图片对象
         this.captchaImg = res.data.data.captchaImg
       })
     },
@@ -97,6 +118,7 @@ export default {
     // Result code
   },
   mounted() {
+    // 挂载时调用 getCaptcha() 方法
     this.getCaptcha()
   }
 }
