@@ -18,4 +18,7 @@ export default {
     width: 100%;
     position: absolute;
   }
+  a {
+    text-decoration: None;
+  }
 </style>

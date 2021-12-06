@@ -15,6 +15,9 @@ export default new Vuex.Store({
         SET_TOKEN: (state, token) => {
             state.jwt = token
             localStorage.setItem("token", token)
+        },
+        resetState: (state) => {
+            state.jwt = ''
         }
     },
 

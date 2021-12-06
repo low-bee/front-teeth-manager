@@ -9,14 +9,19 @@
       <template slot="title">
         <!--            <i class="el-icon-location"></i>-->
         <span>设计病例</span>
-      </template>
 
-      <el-menu-item index="1">
-        <span slot="title">设计病例</span>
-      </el-menu-item>
-      <el-menu-item index="2">
-        <span slot="title">保持器病例</span>
-      </el-menu-item>
+
+      </template>
+      <router-link to="/patient-manage">
+        <el-menu-item index="2">
+          <span slot="title">病例管理</span>
+        </el-menu-item>
+      </router-link>
+      <router-link to="/keep-patient-manage">
+        <el-menu-item index="3">
+          <span slot="title">保持器病例</span>
+        </el-menu-item>
+      </router-link>
     </el-submenu>
 
     <el-menu-item index="4">
@@ -36,7 +41,8 @@
 
 <script>
 export default {
-  name: "SideMenu"
+  name: "SideMenu",
+
 }
 </script>
 

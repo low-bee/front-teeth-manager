@@ -1,7 +1,7 @@
 <template>
-<!--
-  element 页面布局
--->
+  <!--
+    element 页面布局
+  -->
   <el-container>
     <!--    侧边栏 -->
     <el-aside width="200px">
@@ -12,16 +12,18 @@
       <el-header>
         <strong>病例管理系统</strong>
         <div class="header-avatar">
-<!--
-  用户的小头像
--->
-          <el-avatar size="medium" src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"></el-avatar>
+          <!--
+            用户的小头像
+          -->
+          <el-avatar size="medium" :src="userInfo.avatar"></el-avatar>
           <el-dropdown>
-            <span class="el-dropdown-link">管理页面<i class="el-icon-arrow-down el-icon--right"></i>
+            <span class="el-dropdown-link">{{ userInfo.username }}<i class="el-icon-arrow-down el-icon--right"></i>
             </span>
             <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item>个人中心</el-dropdown-item>
-              <el-dropdown-item>退出</el-dropdown-item>
+              <el-dropdown-item>
+                <router-link to="/user-center">个人中心</router-link>
+              </el-dropdown-item>
+              <el-dropdown-item @click.native="logout">退出</el-dropdown-item>
             </el-dropdown-menu>
             <el-link href="" target="_blank">网站1</el-link>
             <el-link href="" target="_blank">网站2</el-link>
@@ -30,9 +32,9 @@
       </el-header>
 
       <el-main>
-<!--
-    显示子路由Index
--->
+        <!--
+            显示子路由Index
+        -->
         <router-view></router-view>
       </el-main>
 
@@ -42,10 +44,45 @@
 
 <script>
 import SideMenu from "@/views/inc/SideMenu";
+
 export default {
   name: "Home",
   components: {
     SideMenu
+  },
+  data() {
+    return {
+      userInfo: {
+        id: "",
+        username: "",
+        avatar: ""
+      }
+    }
+  },
+  mounted() {
+    this.getUserInfo()
+  },
+  methods: {
+    getUserInfo() {
+      this.$axios.get("/sys/userInfo").then(res => {
+        this.userInfo = res.data.data
+      })
+    },
+    logout() {
+      this.$axios.post("/logout").then(res => {
+        if (res.data.data.flag === true) {
+          // 清除本地和session中的信息
+          localStorage.clear()
+          sessionStorage.clear()
+          // 清除状态栏中的信息
+          this.$store.commit("resetState")
+          this.$router.push("/login")
+        } else {
+          console.log("退出失败！")
+        }
+      })
+
+    }
   }
 }
 </script>
@@ -73,9 +110,11 @@ export default {
   cursor: pointer;
   color: #409EFF;
 }
+
 .el-dropdown {
 
 }
+
 .el-icon-arrow-down {
   font-size: 12px;
 }
@@ -88,6 +127,7 @@ export default {
   align-items: center;
 
 }
+
 .el-dropdown {
   margin-right: 5px;
 }
