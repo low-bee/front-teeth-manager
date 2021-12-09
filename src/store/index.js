@@ -18,10 +18,23 @@ export default new Vuex.Store({
         },
         resetState: (state) => {
             state.jwt = ''
+        },
+        resetUserInfo: (state, value) => {
+            state.userInfo = value
+        },
+        uploadAvatar: (state, imageUrl) => {
+            state.userInfo.avatar = imageUrl
         }
     },
 
     state: {
-        jwt: ''
+        jwt: '',
+        userInfo: {
+            username: "",
+            gender: "",
+            phone: "",
+            email: "",
+            avatar:""
+        }
     }
 })

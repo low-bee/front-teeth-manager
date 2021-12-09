@@ -26,7 +26,33 @@ Mock.mock('/sys/userInfo', 'get',  () => {
     result.data = {
         id: "1",
         username: "test",
-        avatar: "https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"
+        avatar: "https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png",
+        level: 1,
+        gender: "男",
+        phone: "18515888888",
+        email: "xiaolongorigin@gmail.com",
+        telephone: "",
+        detail: [
+            {
+                id:1,
+                hospital: "邯郸市中心医院",
+                address: "河北省邯郸市丛台区",
+                addressDetail: "邯郸市中心医院东区"
+            },
+            {
+                id:2,
+                hospital: "协和医院",
+                address: "北京市",
+                addressDetail: "东城区"
+            }
+        ],
+
+        hospital: ["邯郸市中心医院", "协和医院"],
+        address: "河北省邯郸市丛台区",
+        addressDetail: "邯郸市中心医院东区",
+
+        percentage: 10,
+        flag: true
     }
     return result
 })
@@ -65,6 +91,34 @@ Mock.mock('/sys/user/updatePassword', 'post',  () => {
 Mock.mock('/logout', 'post',  () => {
     result.data = {
         flag: true
+    }
+    return result
+})
+
+Mock.mock('/user/userDealNum', 'get',  () => {
+    result.data = {
+        knockdown:2,
+        lastYearCompleted:1
+    }
+    return result
+})
+
+Mock.mock("/user/updateUserInfo", 'post',  () => {
+    result.data = {
+    }
+    return result
+})
+
+Mock.mock("/image/post/avatar", 'post',  () => {
+    result.data = {
+        code: 200
+    }
+    return result
+})
+
+Mock.mock("/create/id", 'get',  () => {
+    result.data = {
+        id: 'dasdasdasdasdasd-asdasdasdasda-dasddasdadfsc'
     }
     return result
 })

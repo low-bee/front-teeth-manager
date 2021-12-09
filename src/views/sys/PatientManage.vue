@@ -14,6 +14,11 @@
     <el-menu-item index="6">已完成({{ listNum.completed }})</el-menu-item>
     <el-menu-item index="7">已归档({{ listNum.archived }})</el-menu-item>
 
+    <router-link to="/create/base">
+      <el-button type="primary" style="float: right; display: flex;" @click="dealCreate">新建病例</el-button>
+    </router-link>
+
+
   </el-menu>
 </template>
 
@@ -40,6 +45,7 @@ export default {
   },
   methods: {
     getList(){
+
       this.$axios.get("/patient/list", {
         params: {
           paramsList: "keepLive,animationAwaitDeal,treating,dealWith,awaitCommit,completed,archived"
@@ -47,6 +53,17 @@ export default {
       }).then( res => {
         this.listNum = res.data.data
       })
+    },
+    dealCreate() {
+      // 获取一个创建的id
+      this.$axios.get('/create/id').then(res => {
+        this.$router.push({
+          // 使用创建的id + 路由名字进行跳转
+          path: `/create/base/${res.data.data.id}`
+        })
+      })
+
+
     }
   }
 }
