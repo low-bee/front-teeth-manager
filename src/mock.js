@@ -115,10 +115,36 @@ Mock.mock("/image/post/avatar", 'post',  () => {
     }
     return result
 })
+Mock.mock("/image/posts/", 'post',  () => {
+    result.data = {
+        code: 200,
+        imageUrl: 'https://www.google.com/imgres?imgurl=http%3A%2F%2Fwww.haodoo.net%2Fhhd%2Fimages%2F353a.jpg&imgrefurl=http%3A%2F%2Fwww.haodoo.net%2F%3FM%3Dhhd%26P%3D353&tbnid=gmdN2gRjHjLU7M&vet=12ahUKEwjOgJWj59X0AhWCRvUHHfiIBkEQMygDegUIARCyAQ..i&docid=9wgDdjhaKJ3luM&w=500&h=352&itg=1&q=%E6%88%90%E5%8A%9F&ved=2ahUKEwjOgJWj59X0AhWCRvUHHfiIBkEQMygDegUIARCyAQ'
+    }
+    return result
+})
+
 
 Mock.mock("/create/id", 'get',  () => {
     result.data = {
         id: 'dasdasdasdasdasd-asdasdasdasda-dasddasdadfsc'
+    }
+    return result
+})
+
+Mock.mock("/image/token", 'get',  () => {
+    result.data = {
+        token: 'jksklkdljfndasd-adgkflgnsda-dasddassdfoomvdfsc'
+    }
+    return result
+})
+
+Mock.mock("/sys/upload", 'get',  () => {
+    result.data = {
+        appId: '1302193597',
+        SecretId: 'AKID72i7G8qHRKxOYR3PUIq9BxSgdIgogHbf',
+        SecretKey: 'pNdcLo0vYv1qOXQ2NQDjxvd4E6i37uQh',
+        Bucket: 'tooth-1302193597',
+        Region: 'ap-guangzhou'
     }
     return result
 })

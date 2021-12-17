@@ -4,10 +4,10 @@
       <el-step title="基本信息" icon="el-icon-edit">
         <router-link to="/create/base"></router-link>
       </el-step>
-      <el-step title="照片上传" icon="el-icon-upload">
+      <el-step title="照片上传" icon="el-icon-picture">
         <router-link to="/create/image"></router-link>
       </el-step>
-      <el-step title="病历单提交" icon="el-icon-picture">
+      <el-step title="病历单提交" icon="el-icon-upload">
         <router-link to="/create/case"></router-link>
       </el-step>
       <el-step title="牙齿模型" icon="el-icon-picture">
