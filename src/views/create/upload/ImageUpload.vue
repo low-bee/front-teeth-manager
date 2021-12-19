@@ -1,132 +1,136 @@
 <template>
-  <div style="width:230px">
-    <!--
-      show-file-list: 是否显示上传的文件列表
-
-      action:用来指定文件要上传的地址，由于我们需要定制上传动作
-             这里设为#
-      :http-request：自定义上传行为（重点）
-
-      on-success: 上传成功之后的回调
-      before-upload： 上传之前的检查
-    -->
+  <!--    调用该组件需要在外部组件中创建方法getUploadObject，并将这个方法传递到这个组件中-->
+  <div class="el-button-clear">
     <el-upload
-        class="avatar-uploader"
         action="#"
+        class="image-upload"
+        :http-request="uploadImage"
+        :on-remove="handleRemove"
+        :before-upload="beforeUpload"
         :show-file-list="false"
-        :on-success="handleAvatarSuccess"
-        :before-upload="beforeAvatarUpload"
-        :http-request="upload"
-    >
-      <img alt="" v-if="value" :src="value" class="avatar">
-      <i v-else class="el-icon-plus avatar-uploader-icon" />
+        drag
+        >
+      <img alt="" :src="filePath" v-if="!fileObj.url" class="el-img-upload">
+      <img alt="" v-else v-bind:src="fileObj.url">
+      <div class="el-upload__text"><i class="el-icon-circle-plus-outline"></i>点击上传/拖拽图片</div>
+      <div class="el-upload__tip" slot="tip">{{ slotTip }}</div>
     </el-upload>
-    <el-progress v-if="showProgress" :percentage="percentage" />
   </div>
+
 </template>
 
 <script>
-// 下面的代码是固定写法
-const COS = require('cos-js-sdk-v5')
-// 填写自己腾讯云cos中的key和id (密钥)
-const cos = new COS({
-  SecretId: 'AKID72i7G8qHRKxOYR3PUIq9BxSgdIgogHbf', // 腾讯云份识别ID自己扫码查询
-  SecretKey: 'pNdcLo0vYv1qOXQ2NQDjxvd4E6i37uQh' // 身份秘钥
-})
 export default {
-  name: 'UploadImg',
-  props: {
-    value: {
-      type: String,
-      required: true
-    }
-  },
+  name: "ImageUpload",
+
   data() {
     return {
-      showProgress: false,
-      percentage: 20 // 上传进度条
+      fileObj: {},
     }
   },
+  // 从外层传入数据 ['filePath', "imageFlag", 'outUrl', 'slotTip']
+  props: {
+    filePath: {
+      type: String,
+      default: ''
+    },
+    imageFlag: {
+      type: Boolean,
+      require: true
+    },
+    outUrl: {
+      type: String,
+      default: ''
+    },
+    slotTip: {
+      type: String,
+      default: ''
+    },
+  },
+
+  mounted() {
+    this.getUploadData()
+  },
+
   methods: {
-
-    upload(res) {
-      console.log('上传的文件是', res.file)
-      if (!res.file) {
-        return
+    // 发送http请求上传图片
+    uploadImage(params) {
+      if (params.file) {
+        // 执行上传操作
+        this.$cos.putObject({
+          Bucket: this.uploadData.Bucket,
+          Region: this.uploadData.Region,
+          Key: params.file.name,
+          Body: params.file,
+          StorageClass: 'STANDARD',
+          onProgress: (params) => {
+            this.percent = params.percent * 100
+          }
+        }, (error, data) => {
+          if (!error && data.statusCode === 200) {
+            let url = 'https://' + data.Location
+            let fileName = data.Location.split('/')[1]
+            this.fileObj = {
+              name: decodeURIComponent(fileName),
+              url: url
+            }
+            console.log(this.fileObj)
+            // 上传成功之后，将数据发送到上层
+            this.sendFileObj('emitURLObj');
+          }
+        })
       }
-      this.showProgress = true // 显示进度条
-      // 1. 把图片上传到腾讯云COS
-      // 执行上传操作
+    },
 
-      cos.putObject({
-        Bucket: 'tooth-1302193597', /* 存储桶 */
-        Region: 'ap-beijing', /* 存储桶所在地域，必须字段 */
-        Key: res.file.name, /* 文件名 */
-        StorageClass: 'STANDARD', // 上传模式, 标准模式
-        Body: res.file, // 上传文件对象
-        onProgress: (progressData) => {
-          console.log('上传的进度', JSON.stringify(progressData))
-          this.percentage = progressData.percent * 100
-        }
-      }, (err, data) => {
-        console.log(err)
-        console.log(data)
+    handleRemove(file) {
+      this.$cos.deleteObject({
+        Bucket: this.uploadData.Bucket,
+        Region: this.uploadData.Region,
+        Key: file.name
+      }, (error, data) => {
+        if (!error && data.statusCode === 204) {
+          // 204表示成功删除
+          // filter 之后会产生一个新的数组而不是在原来的基础上进行过滤
+          this.fileObj = {}
 
-        // 上传成功之后
-        if (data.statusCode === 200) {
-          // 2. 显示图片
-          this.imageUrl = `https:${data.Location}`
-          // 3. 通知父组件
-          this.$emit('input', `https:${data.Location}`)
+          // 删除成功之后，将数据发送到上层
+          this.sendFileObj('emitURLObj')
         }
-        this.showProgress = false
+      })
+
+    },
+
+    getUploadData() {
+      this.$axios.get('/sys/upload').then(res => {
+        this.uploadData = res.data.data
       })
     },
 
-    handleAvatarSuccess(res, file) {
-      this.imageUrl = URL.createObjectURL(file.raw);
-      console.log(this.imageUrl)
-      this.$store.commit("uploadAvatar", this.imageUrl)
+    sendFileObj(event){
+      // 发送当前的uploadObject出去
+      this.$emit(event, this.fileObj)
     },
 
-    beforeAvatarUpload(file) {
-      const isPNG = file.type === 'image/png'
-      const isJPG = file.type === 'image/jpeg'
-      const isLt2M = file.size / 1024 / 1024 < 2
-      if (!isPNG || !isJPG) {
-        this.$message.error('上传头像图片只能是 PNG/JPG 格式!')
+    // 更新前校验
+    beforeUpload(file) {
+      const isJPG = file.type === 'image/jpeg';
+      const isLt20M = file.size / 1024 / 1024 < 20;
+      if (!isJPG) {
+        this.$message.error('图片只能是 JPG 格式!');
       }
-      if (!isLt2M) {
-        this.$message.error('上传头像图片大小不能超过 2MB!')
+      if (!isLt20M) {
+        this.$message.error('上图片大小不能超过 2MB!');
       }
-      return isPNG && isLt2M
+      return isLt20M;
     }
   }
 }
 </script>
 
-<style>
-.avatar-uploader .el-upload {
-  border: 1px dashed #d9d9d9;
-  border-radius: 6px;
-  cursor: pointer;
-  position: relative;
-  overflow: hidden;
-}
-.avatar-uploader .el-upload:hover {
-  border-color: #409eff;
-}
-.avatar-uploader-icon {
-  font-size: 28px;
-  color: #8c939d;
-  width: 178px;
-  height: 178px;
-  line-height: 178px;
-  text-align: center;
-}
-.avatar {
-  width: 178px;
-  height: 178px;
-  display: block;
+<style scoped>
+.el-upload__tip{
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 </style>

@@ -10,21 +10,21 @@
         <el-button type="primary" plain @click="submitForm('userInfoForm')" v-if="editable">保存</el-button>
       </div>
       <el-avatar :size="100" :src="$store.state.userInfo.avatar" v-if="!editable"></el-avatar>
-        <el-upload
-            v-if="editable"
-            ref="upload"
-            action="#"
-            class="avatar-uploader"
-            list-type="picture"
-            :on-preview="preview"
-            :show-file-list="false"
-            :http-request="uploadImage"
-            :on-remove="handleRemove"
-        >
-  <!--        如果有图片的话-->
-          <img alt="" v-if="imageUrl" :src="imageUrl" class="avatar">
-          <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-        </el-upload>
+      <el-upload
+          v-if="editable"
+          ref="upload"
+          action="#"
+          class="avatar-uploader"
+          list-type="picture"
+          :on-preview="preview"
+          :show-file-list="false"
+          :http-request="uploadImage"
+          :on-remove="handleRemove"
+      >
+<!--        如果有图片的话-->
+        <img alt="" v-if="imageUrl" :src="imageUrl" class="avatar">
+        <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+      </el-upload>
       </div>
 
     </div>
@@ -208,7 +208,7 @@ export default {
         }, (error, data) => {
           console.log(error || data)
           if (!error && data.statusCode === 200) {
-            this.imageUrl = 'http://' + data.Location
+            this.imageUrl = 'https://' + data.Location
           }
         })
       }

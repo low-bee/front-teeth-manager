@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="create-case">
     <el-steps :active="currStep" simple>
       <el-step title="基本信息" icon="el-icon-edit">
         <router-link to="/create/base"></router-link>
@@ -17,15 +17,19 @@
         <router-link to="/create/submit"></router-link>
       </el-step>
     </el-steps>
+    <div class="create-case-main">
+      <router-view></router-view>
+    </div>
 
-    <router-view></router-view>
+    <div class="create-case-but">
+      <el-button-group>
+        <el-button type="primary" icon="el-icon-arrow-left" @click="prevPage" v-if="currStep > 0">上一步</el-button>
+        <el-button type="primary" @click="nextPage" v-if="currStep < 4">下一步<i class="el-icon-arrow-right el-icon--right" ></i></el-button>
+        <el-button type="primary" icon="el-icon-document-checked" v-if="currStep !== 4">保存</el-button>
+        <el-button type="primary" icon="el-icon-document-checked" v-else >提交</el-button>
+      </el-button-group>
+    </div>
 
-    <el-button-group>
-      <el-button type="primary" icon="el-icon-arrow-left" @click="prevPage" v-if="currStep > 0">上一步</el-button>
-      <el-button type="primary" @click="nextPage" v-if="currStep < 4">下一步<i class="el-icon-arrow-right el-icon--right" ></i></el-button>
-      <el-button type="primary" icon="el-icon-document-checked" v-if="currStep !== 4">保存</el-button>
-      <el-button type="primary" icon="el-icon-document-checked" v-else >提交</el-button>
-    </el-button-group>
   </div>
 
 
@@ -84,5 +88,17 @@ export default {
 </script>
 
 <style scoped>
-
+  .create-case-main {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .create-case-but{
+    display: flex;
+    justify-content: center;
+    bottom: 0;
+    position: fixed;
+    width: 100%;
+    z-index: 100;
+  }
 </style>

@@ -3,123 +3,82 @@
 <!--   面相照上传 -->
     <h1>面部照上传</h1>
     <div class="face">
-        <el-upload
-            class="upload-demo"
-            drag
-            action="/image/posts/"
-            :on-success="onUpdate">
-          <img alt="" src="../../assets/FrontFace.png" v-if="!(imageURLObject && imageURLObject.frontFace.length > 0)" class="el-img-upload">
-          <img alt="" v-else :src="imageURLObject.frontFace">
-          <div class="el-upload__text"><i class="el-icon-circle-plus-outline"></i>点击上传/拖拽图片</div>
-          <div class="el-upload__tip" slot="tip">面向正位</div>
-        </el-upload>
+        <ImageUpload :filePath="require('@/assets/FrontFace.png')"
+                     :imageFlag="!(imageURLObject && imageURLObject.frontFace.length > 0)"
+                     :outURL="imageURLObject.frontFace"
+                     v-on:emitURLObj="setFrontFaceURL"
+                     :slotTip="'面向正位'"
+        ></ImageUpload>
+        <ImageUpload :filePath="require('@/assets/FrontSmileFace.png')"
+                     :imageFlag="!(imageURLObject && imageURLObject.frontSmileFace.length > 0)"
+                     :outURL="imageURLObject.frontSmileFace"
+                     v-on:emitURLObj="setFrontSmileFace"
+                     :slotTip="'面向微笑'"
+        ></ImageUpload>
 
-        <el-upload
-            class="upload-demo"
-            drag
-            action="/image/posts/"
-            :on-success="onUpdate">
-          <img alt="" src="../../assets/FrontSmileFace.png" v-if="!(imageURLObject && imageURLObject.frontSmileFace.length > 0)" class="el-img-upload">
-          <img alt="" v-else :src="imageURLObject.frontSmileFace">
-          <div class="el-upload__text"><i class="el-icon-circle-plus-outline"></i>点击上传/拖拽图片</div>
-          <div class="el-upload__tip" slot="tip">面向微笑</div>
-        </el-upload>
-
-        <el-upload
-            class="upload-demo"
-            drag
-            action="/image/posts/"
-            :on-success="onUpdate">
-          <img alt="" src="../../assets/SideFace.png" v-if="!(imageURLObject && imageURLObject.sideFace.length > 0)" class="el-img-upload">
-          <img alt="" v-else :src="imageURLObject.sideFace">
-          <div class="el-upload__text"><i class="el-icon-circle-plus-outline"></i>点击上传/拖拽图片</div>
-          <div class="el-upload__tip" slot="tip">面向侧位</div>
-        </el-upload>
+        <ImageUpload :filePath="require('@/assets/SideFace.png')"
+                     :imageFlag="!(imageURLObject && imageURLObject.sideFace.length > 0)"
+                     :outURL="imageURLObject.sideFace"
+                     v-on:emitURLObj="setSideFace"
+                     :slotTip="'面向侧位'"
+        ></ImageUpload>
       </div>
 
 <!--   口内照上传 -->
     <h1>口腔内照上传(必选)</h1>
     <div class="intraoral-image">
-      <el-upload
-          class="upload-demo"
-          drag
-          action="/image/posts/"
-          :on-success="onUpdate">
-        <i v-if="!(imageURLObject && imageURLObject.upTooth.length > 0)" class="el-icon-upload"></i>
-        <img alt="" v-else :src="imageURLObject.upTooth">
-        <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
-        <div class="el-upload__tip" slot="tip">上牙列</div>
-      </el-upload>
+      <ImageUpload :filePath="require('@/assets/upTooth.png')"
+                   :imageFlag="!(imageURLObject && imageURLObject.upTooth.length > 0)"
+                   :outURL="imageURLObject.upTooth"
+                   v-on:emitURLObj="setUpToothURL"
+                   :slotTip="'上牙列'"
+      ></ImageUpload>
 
-      <el-upload
-          class="upload-demo"
-          drag
-          action="/image/posts/"
-          :on-success="onUpdate">
-        <i v-if="!(imageURLObject && imageURLObject.downTooth.length > 0)" class="el-icon-upload"></i>
-        <img alt="" v-else :src="imageURLObject.downTooth">
-        <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
-        <div class="el-upload__tip" slot="tip">下牙列</div>
-      </el-upload>
+      <ImageUpload :filePath="require('@/assets/downTooth.png')"
+                   :imageFlag="!(imageURLObject && imageURLObject.downTooth.length > 0)"
+                   :outURL="imageURLObject.downTooth"
+                   v-on:emitURLObj="setDownToothURL"
+                   :slotTip="'下牙列'"
+      ></ImageUpload>
 
-      <el-upload
-          class="upload-demo"
-          drag
-          action="/image/posts/"
-          :on-success="onUpdate">
-        <i v-if="!(imageURLObject && imageURLObject.rightTooth.length > 0)" class="el-icon-upload"></i>
-        <img alt="" v-else :src="imageURLObject.rightTooth">
-        <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
-        <div class="el-upload__tip" slot="tip">右侧位口内像</div>
-      </el-upload>
+      <ImageUpload :filePath="''"
+                   :imageFlag="!(imageURLObject && imageURLObject.leftTooth.length > 0)"
+                   :outURL="imageURLObject.leftTooth"
+                   v-on:emitURLObj="setLeftToothURL"
+                   :slotTip="'左侧口腔内像'"
+      ></ImageUpload>
 
-      <el-upload
-          class="upload-demo"
-          drag
-          action="/image/posts/"
-          :on-success="onUpdate">
-        <i v-if="!(imageURLObject && imageURLObject.frontTooth.length > 0)" class="el-icon-upload"></i>
-        <img alt="" v-else :src="imageURLObject.frontTooth">
-        <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
-        <div class="el-upload__tip" slot="tip">前侧位口内像</div>
-      </el-upload>
+      <ImageUpload :filePath="''"
+                   :imageFlag="!(imageURLObject && imageURLObject.rightTooth.length > 0)"
+                   :outURL="imageURLObject.rightTooth"
+                   v-on:emitURLObj="setRightToothURL"
+                   :slotTip="'右侧口腔内像'"
+      ></ImageUpload>
 
-      <el-upload
-          class="upload-demo"
-          drag
-          action="/image/posts/"
-          :on-success="onUpdate">
-        <i v-if="!(imageURLObject && imageURLObject.leftTooth.length > 0)" class="el-icon-upload"></i>
-        <img alt="" v-else :src="imageURLObject.leftTooth">
-        <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
-        <div class="el-upload__tip" slot="tip">左侧位口内像</div>
-      </el-upload>
+      <ImageUpload :filePath="''"
+                   :imageFlag="!(imageURLObject && imageURLObject.frontTooth.length > 0)"
+                   :outURL="imageURLObject.frontTooth"
+                   v-on:emitURLObj="setFrontToothURL"
+                   :slotTip="'前侧口腔内像'"
+      ></ImageUpload>
     </div>
-
 <!--   X光照上传 -->
     <h1>X光片</h1>
     <div class="x-image">
-      <el-upload
-          class="upload-demo"
-          drag
-          action="/image/posts/"
-          :on-success="onUpdate">
-        <i v-if="!(imageURLObject && imageURLObject.xSurfaceFault.length > 0)" class="el-icon-upload"></i>
-        <img alt="" v-else :src="imageURLObject.xSurfaceFault">
-        <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
-        <div class="el-upload__tip" slot="tip">曲面断层</div>
-      </el-upload>
 
-      <el-upload
-          class="upload-demo"
-          drag
-          action="/image/posts/"
-          :on-success="onUpdate">
-        <i v-if="!(imageURLObject && imageURLObject.xHeadSide.length > 0)" class="el-icon-upload"></i>
-        <img alt="" v-else :src="imageURLObject.xHeadSide">
-        <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
-        <div class="el-upload__tip" slot="tip">头颅侧位</div>
-      </el-upload>
+      <ImageUpload :filePath="''"
+                   :imageFlag="!(imageURLObject && imageURLObject.xSurfaceFault.length > 0)"
+                   :outURL="imageURLObject.xSurfaceFault"
+                   :slotTip="'曲面断层'"
+                   v-on:emitURLObj="setXSurfaceFaultURL"
+      ></ImageUpload>
+
+      <ImageUpload :filePath="''"
+                   :imageFlag="!(imageURLObject && imageURLObject.xHeadSide.length > 0)"
+                   :outURL="imageURLObject.xHeadSide"
+                   :slotTip="'头颅侧位'"
+                   v-on:emitURLObj="setXHeadSide"
+      ></ImageUpload>
 
     </div>
 
@@ -129,17 +88,31 @@
 
     </div>
 <!--    上传CBCT-->
-
-
+    <div class="inline-input">
+      <el-input
+          v-model="filename"
+          placeholder="上传CBCT"
+          disabled>
+      </el-input>
+    <FileUpload v-on:emitUploadObject="setUploadData" :limit="1"/>
+    </div>
   </div>
 
 </template>
 
 <script>
+import ImageUpload from "@/views/create/upload/ImageUpload";
+import FileUpload from "@/views/create/upload/FileUpload";
 export default {
   name: "ImageForm",
+  components: {
+    ImageUpload,
+    FileUpload
+  },
   data(){
     return {
+      uploadObject: [],
+      filename: '',
 
       uploadUrl: '',
       imageURLObject :{
@@ -151,8 +124,8 @@ export default {
         upTooth: '',
         downTooth: '',
         rightTooth: '',
-        frontTooth: '',
         leftTooth: '',
+        frontTooth: '',
 
         xSurfaceFault: '',
         xHeadSide: '',
@@ -164,49 +137,98 @@ export default {
     }
   },
 
+  watch: {
+    uploadObject( newVal) {
+      this.filename =  newVal.map(item => {
+        return item.name
+      }).join(",")
+    }
+  },
+
   methods: {
     onUpdate(res) {
       this.imageURLObject.frontFace = res.data.imageUrl;
     },
+    setFrontFaceURL(fileObj) {
+      console.log(fileObj.url)
+      this.imageURLObject.frontSmileFace = fileObj.url
+    },
+    setFrontSmileFace(fileObj) {
+      this.imageURLObject.frontSmileFace = fileObj.url
+    },
+    setSideFace(fileObj) {
+      this.imageURLObject.sideFace = fileObj.url
+    },
+    setUpToothURL(fileObj) {
+      this.imageURLObject.upTooth = fileObj.url
+    },
+    setDownToothURL(fileObj) {
+      this.imageURLObject.downTooth = fileObj.url
+    },
+    setLeftToothURL(fileObj) {
+      this.imageURLObject.leftTooth = fileObj.url
+    },
+    setRightToothURL(fileObj) {
+      this.imageURLObject.rightTooth = fileObj.url
+    },
+    setFrontToothURL(fileObj) {
+      this.imageURLObject.frontTooth = fileObj.url
+    },
+    setXSurfaceFaultURL(fileObj) {
+      this.imageURLObject.xSurfaceFault = fileObj.url
+    },
+    setXHeadSide(fileObj) {
+      this.imageURLObject.xHeadSide = fileObj.url
+    },
 
-    getUoloadUrl() {
-      this.$axios.get("/sys/upload").then(res => {
-        this.uploadUrl = res.data.data
-          }
-      )
+    setUploadData(obj) {
+      this.uploadObject = obj
     }
   }
 }
 </script>
 
 <style scoped>
-  .face {
-    display: flex;
-    width: 1000px
-  }
+.face > * {
+  display: inline-block;
+}
 
-  .intraoral-image {
-    display: flex;
-  }
-  .x-image{
-    display: flex;
-  }
-  .upload-demo{
-  }
-  .el-upload__tip{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  .el-icon-upload{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
+.intraoral-image > * {
+  display: inline-block;
+}
 
-  .el-img-upload{
-    width: 150px;
-    height: 150px;
-  }
+.x-image > * {
+  display: inline-block;
+}
+
+.el-input {
+  width: 400px;
+}
+.inline-input > * {
+  display: inline-block;;
+}
+  /*.intraoral-image {*/
+  /*  display: flex;*/
+  /*}*/
+  /*.x-image{*/
+  /*  display: flex;*/
+  /*}*/
+  /*.upload-demo{*/
+  /*}*/
+  /*.el-upload__tip{*/
+  /*  display: flex;*/
+  /*  justify-content: center;*/
+  /*  align-items: center;*/
+  /*}*/
+  /*.el-icon-upload{*/
+  /*  display: flex;*/
+  /*  justify-content: center;*/
+  /*  align-items: center;*/
+  /*}*/
+
+  /*.el-img-upload{*/
+  /*  width: 150px;*/
+  /*  height: 150px;*/
+  /*}*/
 
 </style>
