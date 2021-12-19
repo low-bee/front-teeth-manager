@@ -88,11 +88,7 @@ export default {
 </script>
 
 <style scoped>
-  .create-case-main {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
+
   .create-case-but{
     display: flex;
     justify-content: center;

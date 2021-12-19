@@ -168,6 +168,22 @@ export default {
 </script>
 
 <style scoped>
+.image-box{
+ margin-left: 100px;
+}
+
+.face {
+  margin-left: 50px;
+}
+.intraoral-image {
+  margin-left: 50px;
+}
+.x-image{
+  margin-left: 50px;
+}
+.inline-input {
+  margin-left: 50px;
+}
 .face > * {
   display: inline-block;
 }
@@ -186,28 +202,6 @@ export default {
 .inline-input > * {
   display: inline-block;;
 }
-  /*.intraoral-image {*/
-  /*  display: flex;*/
-  /*}*/
-  /*.x-image{*/
-  /*  display: flex;*/
-  /*}*/
-  /*.upload-demo{*/
-  /*}*/
-  /*.el-upload__tip{*/
-  /*  display: flex;*/
-  /*  justify-content: center;*/
-  /*  align-items: center;*/
-  /*}*/
-  /*.el-icon-upload{*/
-  /*  display: flex;*/
-  /*  justify-content: center;*/
-  /*  align-items: center;*/
-  /*}*/
 
-  /*.el-img-upload{*/
-  /*  width: 150px;*/
-  /*  height: 150px;*/
-  /*}*/
 
 </style>

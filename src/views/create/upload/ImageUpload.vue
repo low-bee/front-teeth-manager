@@ -87,7 +87,6 @@ export default {
       }, (error, data) => {
         if (!error && data.statusCode === 204) {
           // 204表示成功删除
-          // filter 之后会产生一个新的数组而不是在原来的基础上进行过滤
           this.fileObj = {}
 
           // 删除成功之后，将数据发送到上层
