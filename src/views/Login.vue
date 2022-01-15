@@ -30,15 +30,15 @@
           </el-form-item>
           <el-form-item label="验证码" prop="code" style="width: 380px">
             <el-input v-model="loginForm.code" style="width: 172px; float: left"></el-input>
-<!--
-  此处显示验证码，每次都会去getCaptcha获取验证码的图片
- -->
+            <!--
+              此处显示验证码，每次都会去getCaptcha获取验证码的图片
+             -->
             <el-image :src="captchaImg" class="captchaImg" @click="getCaptcha"></el-image>
           </el-form-item>
           <el-form-item prop="submit-but" style="width: 380px">
-<!--
-  点击触发submitForm，首先会触发rules的验证规则
--->
+          <!--
+            点击触发submitForm，首先会触发rules的验证规则
+          -->
             <el-button type="primary" @click="submitForm('loginForm')">登录</el-button>
             <el-button @click="resetForm('loginForm')">重置</el-button>
           </el-form-item>
@@ -50,15 +50,17 @@
 </template>
 
 <script>
+import Element from "element-ui";
 export default {
   name: "Login",
   data() {
     return {
       loginForm: {
-        username: '',
-        password: '',
+        username: 'user',
+        password: 'chuanzhi',
         code: '',
-        token: ''
+        token: '',
+        key: ''
       },
       rules: {
         username: [
@@ -71,7 +73,7 @@ export default {
         ],
         code: [
           { required: true, message: '请输入验证码', trigger: 'blur' },
-          { min: 4, max: 4, message: '长度为4位', trigger: 'blur' }
+          { min: 5, max: 5, message: '长度为5位', trigger: 'blur' }
         ],
       },
       captchaImg: null
@@ -87,15 +89,19 @@ export default {
               '/login',
               this.loginForm
           ).then( res => {
+
             // 会获取到headers里面的authorization字段
             const JWT = res.headers['authorization']
             // 放到vuex中
             this.$store.commit("SET_TOKEN", JWT)
             // 跳转到index页面
-            this.$router.push('/index')
+            this.$router.push('/')
           })
         } else {
-          console.log('error submit!!');
+          Element.Message({
+            type: "error",
+            message: "服务器出现错误！"
+          })
           return false;
         }
       });
@@ -107,10 +113,12 @@ export default {
     getCaptcha() {
       // 获取验证码
       this.$axios.get('/captcha').then(res => {
-        // 获取到验证码之后，将token赋给给loginForm
-        this.loginForm.token = res.data.data.token
+        // 获取到验证码之后，将key赋给给loginForm
+        console.log(res.data.data.key)
+        this.loginForm.key = res.data.data.key
         // 将返回的图片给当前的图片对象
-        this.captchaImg = res.data.data.captchaImg
+        this.captchaImg = res.data.data.base64Img
+        this.loginForm.code = ""
       })
     },
 

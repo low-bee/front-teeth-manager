@@ -13,7 +13,7 @@ import cos from "./cos"
 Vue.use(Element)
 Vue.use(VueRouter)
 
-require("./mock.js")
+// require("./mock.js")
 Vue.prototype.$axios = axios
 Vue.prototype.$cos = cos
 Vue.config.productionTip = false
