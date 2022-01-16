@@ -22,7 +22,7 @@ request.interceptors.request.use(
 request.interceptors.response.use(
 
     response => {
-        console.log(response)
+        // console.log(response)
         let res = response.data;
         if (res.code === 200) {
             return response;
@@ -33,7 +33,6 @@ request.interceptors.response.use(
             })
             return Promise.reject(response.data.msg)
         } else {
-            console.log(router.currentRoute.name)
             if  (router.currentRoute.name !== '/login') {
                 router.push("/login")
             }

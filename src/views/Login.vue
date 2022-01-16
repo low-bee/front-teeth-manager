@@ -84,6 +84,7 @@ export default {
       // 根据规则验证
       this.$refs[formName].validate((valid) => {
         // 如果验证通过，就发送登录请求
+
         if (valid) {
           this.$axios.post(
               '/login',
@@ -114,7 +115,6 @@ export default {
       // 获取验证码
       this.$axios.get('/captcha').then(res => {
         // 获取到验证码之后，将key赋给给loginForm
-        console.log(res.data.data.key)
         this.loginForm.key = res.data.data.key
         // 将返回的图片给当前的图片对象
         this.captchaImg = res.data.data.base64Img
