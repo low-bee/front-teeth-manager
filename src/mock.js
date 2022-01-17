@@ -22,10 +22,11 @@ Mock.mock('/login', 'post',  () => {
     return result;
 })
 
+//
 Mock.mock('/sys/userInfo', 'get',  () => {
     result.data = {
         id: "1",
-        username: "test",
+        username: "xiaolong",
         avatar: "https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png",
         level: 1,
         gender: "男",
