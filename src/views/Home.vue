@@ -67,7 +67,7 @@ export default {
       console.log(22222)
 
       this.$axios.get("/sys/userInfo").then(res => {
-        if (res.code === 200) {
+        if (res.data.code === 200) {
           this.userInfo = res.data.data
         } else {
           console.log(res)
