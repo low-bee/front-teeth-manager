@@ -50,10 +50,10 @@ request.interceptors.response.use(
         }
         // 如果状态码为401，代表没有权限，跳转到登录页面
         if (error.response.status === 401) {
-            router.push("/login").then(r => {
-                console.log(r)
-                Element.Message.error(error.message + ", 请重新登录")
-            })
+            // router.push("/login").then(r => {
+            //     console.log(r)
+            //     Element.Message.error(error.message + ", 请重新登录")
+            // })
         }
         Element.Message.error(error.message)
         return Promise.reject(error)

@@ -5,11 +5,13 @@
       disabled>
   </el-input>
   <FileUpload v-on:emitUploadObject="setUploadData" :limit="2"/>
+  <ThreeTest></ThreeTest>
 </div>
 </template>
 
 <script>
 import FileUpload from "@/views/create/upload/FileUpload";
+import ThreeTest from "@/components/ThreeTest";
 export default {
   name: "ToothModel",
 
@@ -33,7 +35,8 @@ export default {
   },
 
   components: {
-    FileUpload
+    FileUpload,
+    ThreeTest
   },
 
   methods: {
@@ -46,12 +49,14 @@ export default {
 
 <style scoped>
   .el-input {
-    width: 400px;
-    float: left;
+    width: 200px;
+    display: flex;
+    justify-content: center;
+    align-content: center;
   }
   .el-upload {
-    width: 100px;
-    height: 100px;
+    width: 50px;
+    height: 50px;
   }
   .inline-input > *{
     float: left;
