@@ -1,7 +1,4 @@
 <template>
-<!--
-  element 居中显示 类似于 ---- a --- b --- c ---
--->
     <el-row type="flex" class="row-bg" justify="center">
 
       <el-col :span="6" :xl="6" :lg="7">
@@ -21,13 +18,16 @@
   右端的登录表单，绑定了loginForm字段
 -->
       <el-col :span="6">
-        <el-form :model="loginForm" :rules="rules" ref="loginForm" label-width="100px" class="demo-ruleForm">
+        <el-form :model="loginForm" :rules="rules" ref="loginForm" label-width="100px" class="login-ruleForm">
+
           <el-form-item label="用户名" prop="username" style="width: 380px">
             <el-input v-model="loginForm.username"></el-input>
           </el-form-item>
+
           <el-form-item label="密码" prop="password" style="width: 380px">
             <el-input v-model="loginForm.password" type="password"></el-input>
           </el-form-item>
+
           <el-form-item label="验证码" prop="code" style="width: 380px">
             <el-input v-model="loginForm.code" style="width: 172px; float: left"></el-input>
             <!--
@@ -39,8 +39,11 @@
           <!--
             点击触发submitForm，首先会触发rules的验证规则
           -->
-            <el-button type="primary" @click="submitForm('loginForm')">登录</el-button>
-            <el-button @click="resetForm('loginForm')">重置</el-button>
+            <el-button :loading="loading" v-if="!register" type="primary" @click.native.prevent="submitForm()">
+              <span v-if="!loading">登 录</span>
+              <span v-else>登 录 中...</span>
+            </el-button>
+            <el-button @click="resetForm()">重置</el-button>
           </el-form-item>
         </el-form>
       </el-col>
@@ -51,16 +54,20 @@
 
 <script>
 import Element from "element-ui";
+import {getCodeImg} from "@/api/login";
+import {encrypt} from "@/utils/rsaEncrypt";
+import Cookies from 'js-cookie'
+
 export default {
   name: "Login",
   data() {
     return {
       loginForm: {
         username: 'user',
-        password: 'chuanzhi',
+        password: '123456',
         code: '',
         token: '',
-        key: ''
+        uuid: ''
       },
       rules: {
         username: [
@@ -73,31 +80,56 @@ export default {
         ],
         code: [
           { required: true, message: '请输入验证码', trigger: 'blur' },
-          { min: 5, max: 5, message: '长度为5位', trigger: 'blur' }
+          // { min: 5, max: 5, message: '长度为5位', trigger: 'blur' }
         ],
       },
-      captchaImg: null
+      captchaImg: null,
+      cookiePass: "",
+      loading: false,
+      register: false,
+      reset: false
     };
   },
   methods: {
-    submitForm(formName) {
+    submitForm() {
       // 根据规则验证
-      this.$refs[formName].validate((valid) => {
+      this.$refs.loginForm.validate((valid) => {
         // 如果验证通过，就发送登录请求
+        const user = {
+          username: this.loginForm.username,
+          password: this.loginForm.password,
+          code: this.loginForm.code,
+          uuid: this.loginForm.uuid,
+          rememberMe: false
+        }
+        console.log(user)
+        if (user.password !== this.cookiePass){
+          user.password = encrypt(user.password);
+        }
 
         if (valid) {
-          this.$axios.post(
-              '/login',
-              this.loginForm
-          ).then( res => {
+          this.loading = true
+          // 设置账号、密码、记得我等状态
+          if (user.rememberMe) {
+            Cookies.set('username', user.username, { expires: 7 })
+            Cookies.set('password', user.password, { expires: 7 })
+            Cookies.set('rememberMe', user.rememberMe, { expires: 7 })
+          } else {
+            Cookies.remove('username')
+            Cookies.remove('password')
+            Cookies.remove('rememberMe')
+          }
 
-            // 会获取到headers里面的authorization字段
-            const JWT = res.headers['authorization']
-            // 放到vuex中
-            this.$store.commit("SET_TOKEN", JWT)
-            // 跳转到index页面
-            this.$router.push('/')
-          })
+          // 向store中发送一个Login指令，开始登录
+          this.$store.dispatch("Login", user).then(
+              () => {
+                this.loading = false
+                this.$router.push({path: this.redirect || "/"})
+              },
+              () => {
+                this.loading = false
+              }
+          )
         } else {
           Element.Message({
             type: "error",
@@ -107,21 +139,41 @@ export default {
         }
       });
     },
-    resetForm(formName) {
+    resetForm() {
       // 固定写法，重设表单
-      this.$refs[formName].resetFields();
+      this.$refs.loginForm.resetFields((key) => {
+        // 发送请求请求一个新的验证码，删除之前的验证码
+      });
     },
     getCaptcha() {
       // 获取验证码
-      this.$axios.get('/captcha').then(res => {
-        // 获取到验证码之后，将key赋给给loginForm
-        this.loginForm.key = res.data.data.key
-        // 将返回的图片给当前的图片对象
-        this.captchaImg = res.data.data.base64Img
+      getCodeImg().then( res => {
+        this.captchaImg = res.base64Img
+        this.loginForm.uuid  = res.key
+        // 重置验证码
         this.loginForm.code = ""
       })
     },
+    // 从cookie中获取用户名密码
+    getCookie() {
+      const username = Cookies.get('username')
+      let password = Cookies.get('password')
+      const rememberMe = Cookies.get('rememberMe')
+      // 保存cookie里面的加密后的密码
+      this.cookiePass = password === undefined ? '' : password
+      password = password === undefined ? this.loginForm.password : password
+      this.loginForm = {
+        username: username === undefined ? this.loginForm.username : username,
+        password: password,
+        rememberMe: rememberMe === undefined ? false : Boolean(rememberMe),
+        code: ''
+      }
+    },
 
+    // 注册
+    handleRegister() {
+      this.register = !this.register
+    },
     // 后端封装结果，返回的结果需要处理
     // Result code
   },

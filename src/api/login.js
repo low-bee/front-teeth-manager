@@ -1,5 +1,6 @@
 import request from '@/utils/request'
 
+
 export function login(username, password, code, uuid) {
     return request({
         url: 'auth/login',
@@ -22,7 +23,7 @@ export function getInfo() {
 
 export function getCodeImg() {
     return request({
-        url: 'auth/code',
+        url: 'auth/captcha',
         method: 'get'
     })
 }
