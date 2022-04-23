@@ -33,6 +33,7 @@ const routers = new VueRouter({
             path: "/",
             username: "Home",
             component: Home,
+            // component: Index,
             children: [
                 // 配置index为Home的子路由，这样我们就通过router-view动态的变化这个
                 {

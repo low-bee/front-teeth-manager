@@ -34,7 +34,6 @@ const user = {
             return new Promise((resolve, reject) => {
                 login(userInfo.username, userInfo.password, userInfo.code, userInfo.uuid).then(res => {
                     // 解析res为json
-                    const data = res.data
                     // 打印data
                     setToken(res.token, rememberMe)
                     commit('SET_TOKEN', res.token)
@@ -79,6 +78,12 @@ const user = {
                 commit('SET_LOAD_MENUS', false)
             })
         }
+    },
+
+    getters: {
+        getCurrentUser(state) {
+            return state.user.user
+        },
     }
 }
 

@@ -9,7 +9,7 @@
         <el-button type="primary" plain v-if="!editable" @click="editable = !editable">编辑</el-button>
         <el-button type="primary" plain @click="submitForm('userInfoForm')" v-if="editable">保存</el-button>
       </div>
-      <el-avatar :size="100" :src="$store.state.userInfo.avatar" v-if="!editable"></el-avatar>
+      <el-avatar :size="100" :src="user.user.avatar" v-if="!editable"></el-avatar>
       <el-upload
           v-if="editable"
           ref="upload"
@@ -30,7 +30,7 @@
     </div>
 
     <el-form-item label="姓名" prop="username">
-      <el-input v-model="$store.state.userInfo.username"
+      <el-input v-model="user.user.username"
                 :disabled="true"
                 size="mini"
       ></el-input>
@@ -38,23 +38,23 @@
 
     <el-form-item label="性别" prop="gender">
       <el-input
-          v-model="$store.state.userInfo.gender"
+          v-model="user.user.gender"
           size="mini"
           :disabled="true"></el-input>
     </el-form-item>
 
     <el-form-item label="手机" prop="phone-number">
-      <el-input v-model="$store.state.userInfo.phone" size="mini"
+      <el-input v-model="user.user.phone" size="mini"
                 :disabled="true"></el-input>
     </el-form-item>
 
     <el-form-item label="邮箱" prop="email">
-      <el-input v-model="$store.state.userInfo.email" size="mini"
+      <el-input v-model="user.user.email" size="mini"
                 :disabled="true"></el-input>
     </el-form-item>
 
     <el-form-item label="固定电话" prop="telephone">
-      <el-input v-model="$store.state.userInfo.telephone" size="mini"
+      <el-input v-model="user.user.telephone" size="mini"
                 :disabled="!editable"
                 clearable></el-input>
     </el-form-item>
@@ -66,25 +66,25 @@
     </el-form-item>
 
     <el-form-item label="省市区" prop="address">
-      <el-input v-model="$store.state.userInfo.address" size="mini"
+      <el-input v-model="user.user.address" size="mini"
                 :disabled="!editable"
                 clearable></el-input>
     </el-form-item>
 
     <el-form-item label="详细地址" prop="detailed-address">
-      <el-input v-model="$store.state.userInfo.addressDetail" size="mini"
+      <el-input v-model="user.user.addressDetail" size="mini"
                 :disabled="!editable"
                 clearable></el-input>
     </el-form-item>
 
     <el-form-item label="医生资格证书" prop="certification">
-      <el-input v-model="$store.state.userInfo.certification" size="mini"
+      <el-input v-model="user.user.certification" size="mini"
                 :disabled="!editable"
                 clearable></el-input>
     </el-form-item>
 
     <el-form-item label="医生简介" prop="abstract">
-      <el-input v-model="$store.state.userInfo.abstract" size="mini"
+      <el-input v-model="user.user.abstract" size="mini"
                 :disabled="!editable"
                 clearable></el-input>
     </el-form-item>
@@ -95,6 +95,8 @@
 
 <script>
 
+
+import {mapState} from "vuex";
 
 export default {
 
@@ -112,7 +114,7 @@ export default {
       // 是否显示预览
       showDialog: false,
 
-      hospital: this.$store.state.userInfo.hospital.join(","),
+      // hospital:
       // 表单名字
       userInfoForm: {
         username: 'test',
@@ -139,6 +141,7 @@ export default {
     this.getUploadData()
   },
   computed: {
+    ...mapState(['user'])
   },
 
   methods: {

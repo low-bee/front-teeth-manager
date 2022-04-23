@@ -15,9 +15,9 @@
           <!--
             用户的小头像
           -->
-          <el-avatar size="medium" :src="userInfo.avatar"></el-avatar>
+          <el-avatar size="medium" :src="user.user.avatarPath"></el-avatar>
           <el-dropdown>
-            <span class="el-dropdown-link">{{ userInfo.username }}<i class="el-icon-arrow-down el-icon--right"></i>
+            <span class="el-dropdown-link">{{ user.user.username }}<i class="el-icon-arrow-down el-icon--right"></i>
             </span>
             <el-dropdown-menu slot="dropdown">
               <el-dropdown-item>
@@ -44,7 +44,8 @@
 
 <script>
 import SideMenu from "@/views/inc/SideMenu";
-
+import {mapState} from 'vuex'
+import {getInfo} from "@/api/login";
 export default {
   name: "Home",
   components: {
@@ -52,42 +53,26 @@ export default {
   },
   data() {
     return {
-      userInfo: {
-        id: "",
-        username: "",
-        avatar: ""
-      }
+      userInfo: {}
     }
   },
   mounted() {
-    this.getUserInfo()
+    getInfo().then(res => {
+      this.userInfo = res;
+      console.log(this.userInfo);
+    })
+  },
+  computed: {
+    ...mapState(['user']),
   },
   methods: {
-    getUserInfo() {
-      this.$axios.get("/sys/userInfo").then(res => {
-        if (res.data.code === 200) {
-          this.userInfo = res.data.data
-        } else {
-          console.log(res)
-        }
+    logout() {
+      this.$store.dispatch('LogOut').then(() => {
+        this.$router.push('/login')
       })
     },
-    logout() {
-      this.$axios.post("/logout").then(res => {
-        if (res.data.data.flag === true) {
-          // 清除本地和session中的信息
-          localStorage.clear()
-          sessionStorage.clear()
-          // 清除状态栏中的信息
-          this.$store.commit("resetState")
-          this.$router.push("/login")
-        } else {
-          console.log("退出失败！")
-        }
-      })
-
-    }
   }
+
 }
 </script>
 
