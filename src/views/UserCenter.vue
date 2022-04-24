@@ -57,6 +57,7 @@
 
 <script>
 import UserCenterMenu from "@/views/inc/user/UserCenterMenu";
+import {getUserDeal} from "@/api/user";
 export default {
   name: "UserCenter",
 
@@ -111,13 +112,15 @@ export default {
 
     // 获取用户信息
     getUserInfo() {
-      this.$axios.get('/sys/userInfo').then(res => {
-        this.userInfo = res.data.data
-        this.$store.commit("resetUserInfo", res.data.data)
-      })
+      return this.$store.state.user.user;
     },
     // 获取用户年度和累计处理数量
     getUserDeal() {
+
+      getUserDeal(this.userInfo.id).then(() => {
+
+      })
+
       this.$axios.get("/user/userDealNum", {
         params: {
           currUser: this.userInfo.id

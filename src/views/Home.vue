@@ -68,7 +68,10 @@ export default {
   methods: {
     logout() {
       this.$store.dispatch('LogOut').then(() => {
-        this.$router.push('/login')
+            this.$router.push('/login');
+      },
+      () => {
+        this.$message.error('退出失败')
       })
     },
   }

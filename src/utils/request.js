@@ -1,5 +1,5 @@
 import axios from 'axios'
-import router from '@/router/routers'
+import router from '../router'
 import { Notification } from 'element-ui'
 import store from '../store'
 import { getToken } from '@/utils/auth'
@@ -34,17 +34,17 @@ service.interceptors.response.use(
     },
     error => {
         // 兼容blob下载出错json提示
-        if (error.response.data instanceof Blob && error.response.data.type.toLowerCase().indexOf('json') !== -1) {
-            const reader = new FileReader()
-            reader.readAsText(error.response.data, 'utf-8')
-            reader.onload = function(e) {
-                const errorMsg = JSON.parse(reader.result).message
-                Notification.error({
-                    title: errorMsg,
-                    duration: 5000
-                })
-            }
-        } else {
+        // if (error.response.data instanceof Blob && error.response.data.type.toLowerCase().indexOf('json') !== -1) {
+        //     const reader = new FileReader()
+        //     reader.readAsText(error.response.data, 'utf-8')
+        //     reader.onload = function(e) {
+        //         const errorMsg = JSON.parse(reader.result).message
+        //         Notification.error({
+        //             title: errorMsg,
+        //             duration: 5000
+        //         })
+        //     }
+        // } else {
             let code = 0
             try {
                 code = error.response.data.status
@@ -57,13 +57,15 @@ service.interceptors.response.use(
                     return Promise.reject(error)
                 }
             }
-            console.log(code)
+            console.log(code + ".............")
             if (code) {
                 if (code === 401) {
                     store.dispatch('LogOut').then(() => {
                         // 用户登录界面提示
                         Cookies.set('point', 401)
-                        location.reload()
+                        if  (router.currentRoute.name !== '/login') {
+                            router.push("/login")
+                        }
                     })
                 } else if (code === 403) {
                     router.push({ path: '/401' })
@@ -82,7 +84,7 @@ service.interceptors.response.use(
                     duration: 5000
                 })
             }
-        }
+        // }
         return Promise.reject(error)
     }
 )

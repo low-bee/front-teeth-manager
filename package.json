@@ -16,6 +16,7 @@
     "jsencrypt": "^3.2.1",
     "mockjs": "^1.1.0",
     "qs": "^6.10.1",
+    "script-ext-html-webpack-plugin": "^2.1.5",
     "three.js": "^0.77.1",
     "vue": "^2.6.11",
     "vue-resource": "^1.5.3",

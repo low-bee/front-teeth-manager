@@ -10,3 +10,11 @@ export function uploadImage(file) {
         }
     })
 }
+
+export function getUserDeal(param) {
+    return request({
+            url: '/api/user/userDealNum',
+            method: 'get',
+            param
+        })
+}
