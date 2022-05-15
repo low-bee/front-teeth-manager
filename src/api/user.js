@@ -18,3 +18,12 @@ export function getUserDeal(param) {
             param
         })
 }
+
+
+export function updateUserInfo(param) {
+    return request({
+        url: '/api/user/updateUserInfo',
+        method: 'post',
+        param
+    })
+}

@@ -17,7 +17,9 @@
           -->
           <el-avatar size="medium" :src="user.user.avatarPath"></el-avatar>
           <el-dropdown>
-            <span class="el-dropdown-link">{{ user.user.username }}<i class="el-icon-arrow-down el-icon--right"></i>
+            <span class="el-dropdown-link">
+              {{ user.user.nickName }}
+              <i class="el-icon-arrow-down el-icon--right"></i>
             </span>
             <el-dropdown-menu slot="dropdown">
               <el-dropdown-item>

@@ -105,17 +105,17 @@ export default {
       this.$refs[formName].resetFields();
     },
     getUserInfo() {
-      this.$axios.get('/sys/userInfo').then(res => {
-        this.BaseInfoForm.hospitals = res.data.data.detail.map(item => {
-          return item.hospital;
-        })
-
-        this.BaseInfoForm.address = res.data.data.detail.map(item => {
-          return item.address;
-        })
-
-        this.$store.commit("resetUserInfo", res.data.data)
+      
+      // 从store中湖区用户信息
+      const user = this.$store.state.user.user
+      // 从router中获取用户的医院信息
+      this.BaseInfoForm.hospitals = user.userHospitalDetail.map(item => {
+        return item.hospital
       })
+      this.BaseInfoForm.address = user.userHospitalDetail.map(item => {
+        return item.address;
+      })
+
     }
   }
 

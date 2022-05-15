@@ -7,9 +7,9 @@
       <div class="user-header-img">
       <div class="el-button-group">
         <el-button type="primary" plain v-if="!editable" @click="editable = !editable">编辑</el-button>
-        <el-button type="primary" plain @click="submitForm('userInfoForm')" v-if="editable">保存</el-button>
+        <el-button type="primary" plain @click="submitForm" v-if="editable">保存</el-button>
       </div>
-      <el-avatar :size="100" :src="user.user.avatar" v-if="!editable"></el-avatar>
+      <el-avatar :size="100" :src="user.user.avatarPath" v-if="!editable"></el-avatar>
       <el-upload
           v-if="editable"
           ref="upload"
@@ -30,7 +30,7 @@
     </div>
 
     <el-form-item label="姓名" prop="username">
-      <el-input v-model="user.user.username"
+      <el-input v-model="user.user.userHospitalDetail.username"
                 :disabled="true"
                 size="mini"
       ></el-input>
@@ -60,31 +60,31 @@
     </el-form-item>
 
     <el-form-item label="医院名称" prop="hospital">
-      <el-input v-model="hospital" size="mini"
+      <el-input v-model="hospital.hospital" size="mini"
                 :disabled="!editable"
                 clearable></el-input>
     </el-form-item>
 
     <el-form-item label="省市区" prop="address">
-      <el-input v-model="user.user.address" size="mini"
+      <el-input v-model="hospital.address" size="mini"
                 :disabled="!editable"
                 clearable></el-input>
     </el-form-item>
 
     <el-form-item label="详细地址" prop="detailed-address">
-      <el-input v-model="user.user.addressDetail" size="mini"
+      <el-input v-model="hospital.addressDetail" size="mini"
                 :disabled="!editable"
                 clearable></el-input>
     </el-form-item>
 
     <el-form-item label="医生资格证书" prop="certification">
-      <el-input v-model="user.user.certification" size="mini"
+      <el-input v-model="hospital.certification" size="mini"
                 :disabled="!editable"
                 clearable></el-input>
     </el-form-item>
 
     <el-form-item label="医生简介" prop="abstract">
-      <el-input v-model="user.user.abstract" size="mini"
+      <el-input v-model="hospital.abstract" size="mini"
                 :disabled="!editable"
                 clearable></el-input>
     </el-form-item>
@@ -97,6 +97,7 @@
 
 
 import {mapState} from "vuex";
+import {updateUserInfo} from "@/api/user";
 
 export default {
 
@@ -129,6 +130,8 @@ export default {
         abstract: ''
       },
 
+      hospital : user.user.userHospitalDetail,
+
       rules: {
         username: [
           {required: false, message: '请输入用户名', trigger: 'blur'},
@@ -141,15 +144,16 @@ export default {
     this.getUploadData()
   },
   computed: {
-    ...mapState(['user'])
+    ...mapState(['user']),
+
   },
 
   methods: {
     // 提交表单
-    submitForm(formName) {
-      this.$refs[formName].validate((valid) => {
+    submitForm() {
+      this.$refs.userInfoForm.validate((valid) => {
         if (valid) {
-          this.$axios.post("/user/updateUserInfo", this.userInfoForm).then(res => {
+          updateUserInfo().then(res => {
             if (res.status === 200) {
               // 如果成功保存，输出一个成功提示然后进入userinfo
               this.$notify({
@@ -157,11 +161,16 @@ export default {
                 message: res.msg,
                 type: 'success'
               });
-              this.$router.push('/patient-manage')
+              // this.$router.push('/patient-manage')
+              // 刷新页面
+              window.location.reload()
             }
           })
         } else {
-          console.log('error submit!!');
+          this.$notify({
+            title: '保存失败',
+            type: 'error'
+          });
           return false;
         }
       });

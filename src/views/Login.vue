@@ -18,7 +18,7 @@
   右端的登录表单，绑定了loginForm字段
 -->
       <el-col :span="6">
-        <el-form :model="loginForm" :rules="rules" ref="loginForm" label-width="100px" class="login-ruleForm">
+        <el-form v-if="!register" :model="loginForm" :rules="rules" ref="loginForm" label-width="100px" class="login-ruleForm">
 
           <el-form-item label="用户名" prop="username" style="width: 380px">
             <el-input v-model="loginForm.username"></el-input>
@@ -35,15 +35,42 @@
              -->
             <el-image :src="captchaImg" class="captchaImg" @click="getCaptcha"></el-image>
           </el-form-item>
+        </el-form>
+
+        <el-form v-if="register" :model="registerForm" :rules="rules" ref="registerForm" label-width="100px" class="login-ruleForm">
+
+          <el-form-item label="用户名" prop="username" style="width: 380px">
+            <el-input v-model="registerForm.username"></el-input>
+          </el-form-item>
+
+          <el-form-item label="密码" prop="password" style="width: 380px">
+            <el-input v-model="registerForm.password" type="password"></el-input>
+          </el-form-item>
+
+          <el-form-item label="确认密码" prop="confirmPassword" style="width: 380px">
+            <el-input v-model="registerForm.confirmPassword" type="password"></el-input>
+          </el-form-item>
+
+          <el-form-item label="验证码" prop="code" style="width: 380px">
+            <el-input v-model="registerForm.code" style="width: 172px; float: left"></el-input>
+            <!--
+              此处显示验证码，每次都会去getCaptcha获取验证码的图片
+             -->
+            <el-image :src="captchaImg" class="captchaImg" @click="getCaptcha"></el-image>
+          </el-form-item>
+        </el-form>
+
+        <el-form>
           <el-form-item prop="submit-but" style="width: 380px">
-          <!--
-            点击触发submitForm，首先会触发rules的验证规则
-          -->
-            <el-button :loading="loading" v-if="!register" type="primary" @click.native.prevent="submitForm()">
+            <!--
+              点击触发submitForm，首先会触发rules的验证规则
+            -->
+            <el-button :loading="loading" type="primary" @click.native.prevent="submitForm()">
               <span v-if="!loading">登 录</span>
               <span v-else>登 录 中...</span>
             </el-button>
             <el-button @click="resetForm()">重置</el-button>
+            <el-button type="primary" @click="register=true">注册</el-button>
           </el-form-item>
         </el-form>
       </el-col>
@@ -69,6 +96,8 @@ export default {
         token: '',
         uuid: ''
       },
+
+      registerForm: {},
       rules: {
         username: [
           { required: true, message: '请输入用户名', trigger: 'blur' },
@@ -92,6 +121,7 @@ export default {
   },
   methods: {
     submitForm() {
+      this.register = false;
       // 根据规则验证
       this.$refs.loginForm.validate((valid) => {
         // 如果验证通过，就发送登录请求

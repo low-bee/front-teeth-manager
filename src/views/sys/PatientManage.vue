@@ -3,7 +3,7 @@
       class="el-menu-demo"
       mode="horizontal"
   >
-    <el-menu-item index="1" @click="flag=!flag">
+    <el-menu-item :select=flag index="1">
       <i :class="flag ? 'el-icon-star-off' : 'el-icon-star-o' "></i>
       关注({{ listNum.keepLive }})
     </el-menu-item>
@@ -59,7 +59,7 @@ export default {
       this.$axios.get('/create/id').then(res => {
         this.$router.push({
           // 使用创建的id + 路由名字进行跳转
-          path: `/create/base/${res.data.data.id}`
+          path: `/create/${res.data.data.id}`
         })
       })
 
